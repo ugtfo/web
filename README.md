@@ -14,7 +14,7 @@
 
 ## Use-case диаграмма системы
 
-![UseCase](use_case1.pdf)
+![UseCase](use_case1.png)
 
 ## BPMN диаграмма основных бизнес-процессов
 
@@ -30,7 +30,7 @@
 
 ## ER-диаграмма сущностей
 
-![ER](ER_diagram.pdf)
+![ER](ER_diagram.png)
 
 ## Диаграмма БД
 
