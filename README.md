@@ -14,7 +14,7 @@
 
 ## Use-case диаграмма системы
 
-![UseCase](use_case1.png)
+![UseCase](use_case.png)
 
 ## BPMN диаграмма основных бизнес-процессов
 
