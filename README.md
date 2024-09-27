@@ -30,7 +30,7 @@
 
 ## ER-диаграмма сущностей
 
-![ER](ER_diagram.png)
+![ER](ER_diagram1.png)
 
 ## Диаграмма БД
 
