@@ -1,0 +1,904 @@
+openapi: 3.0.3
+info:
+  title: Картины на заказ
+  description: |-
+    Посетители создают заказ, художники его выполняют
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://ArtistVouchers3.swagger.io/api/v3
+  
+  
+tags:
+  - name: Artists
+    description: Operations about Artists
+  - name: Vouchers
+    description: Operations about Voucherss
+  - name: Accounts
+    description: Operations about Accounts
+  - name: Visitors
+    description: Operations about Visitors
+    
+    
+paths:
+  /Artists:
+    put:
+      tags:
+        - Artists
+      summary: Update an existing Artists
+      description: Update an existing Artists by Id
+      operationId: updateArtist
+      requestBody:
+        description: Update an existent Artists in the Vouchers
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artists'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Artists'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Artists'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artists'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Artists'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Artists not found
+        '422':
+          description: Validation exception
+      security:
+        - ArtistVouchers_auth:
+            - write:Artists
+            - read:Artists
+    post:
+      tags:
+        - Artists
+      summary: Create Artists
+      description: This can only be done by the logged in Accounts as Artists.
+      operationId: createArtist
+      requestBody:
+        description: Created Artists object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artists'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Artists'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Artists'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artists'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Artists'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Artists not found
+                
+  /Artists/Style:
+    get:
+      tags:
+        - Artists
+      summary: Finds Artists by style
+      description: Multiple styles values can be provided with comma separated strings
+      operationId: findArtistsByStyle
+      parameters:
+        - name: style
+          in: query
+          description: Style values that need to be considered for filter
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: realism
+            enum:
+              - realism
+              - impressionism
+              - fauvism
+              - modern
+              - expressionism
+              - cubism
+              - futurism
+              - abstractionism
+              - dadaism
+              - pop-art
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artists'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artists'
+        '400':
+          description: Invalid status value
+        '404':
+          description: Artists not found
+      security:
+        - ArtistVouchers_auth:
+            - write:Artists
+            - read:Artists
+            
+  /Artists/All:
+    get:
+      tags:
+        - Artists
+      summary: Finds All Artists
+      description: Finds All Artists
+      operationId: findAllArtists
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artists'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artists'
+        '400':
+          description: Invalid status value
+        '404':
+          description: Artists not found
+      security:
+        - ArtistVouchers_auth:
+            - write:Artists
+            - read:Artists
+
+  /Artists/{ArtistId}:
+    get:
+      tags:
+        - Artists
+      summary: Find Artists by ID
+      description: Returns a single Artists
+      operationId: getArtistById
+      parameters:
+        - name: ArtistId
+          in: path
+          description: ID of Artists to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artists'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Artists'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Artists not found
+      security:
+        - api_key: []
+        - ArtistVouchers_auth:
+            - write:Artists
+            - read:Artists
+  
+            
+            
+  /Vouchers:
+    get:
+      tags:
+        - Vouchers
+      summary: Returns Artists vouchers by status
+      description: Returns a map of status codes to quantities
+      operationId: getByStatus
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Vouchers not found
+      security:
+        - api_key: []
+        
+    post:
+      tags:
+        - Vouchers
+      summary: Place an Vouchers for a Artists
+      description: Place a new Vouchers in the Vouchers
+      operationId: placeVouchers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vouchers'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Vouchers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Vouchers'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vouchers'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        
+  /Vouchers/Style:
+    get:
+      tags:
+        - Vouchers
+      summary: Returns Artists inventories by style
+      description: Returns a map of status codes to quantities
+      operationId: getByStyle
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Vouchers not found
+      security:
+        - api_key: []
+        
+  /Vouchers/VisitorsId:
+    get:
+      tags:
+        - Vouchers
+      summary: Returns Artists inventories by Visitors Id
+      description: Returns a map of status codes to quantities
+      operationId: getByVisitorsId
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Vouchers not found
+      security:
+        - api_key: []
+        
+  /Vouchers/All:
+    get:
+      tags:
+        - Vouchers
+      summary: Finds All Voucherss
+      description: Finds All Voucherss
+      operationId: findAllVoucherss
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vouchers'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vouchers'
+        '400':
+          description: Invalid status value
+        '404':
+          description: Vouchers not found
+
+        
+          
+  /Vouchers/{VouchersId}:
+    get:
+      tags:
+        - Vouchers
+      summary: Find purchase Vouchers by ID
+      description: For valid response try correct IDs with value. Other values will generate exceptions.
+      operationId: getVouchersById
+      parameters:
+        - name: VouchersId
+          in: path
+          description: ID of Vouchers that needs to be fetched
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vouchers'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Vouchers'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Vouchers not found
+          
+    put:
+      tags:
+        - Vouchers
+      summary: Update Vouchers by ID
+      description: For valid response try correct IDs with value. Other values will generate exceptions.
+      operationId: postVouchersById
+      parameters:
+        - name: VouchersId
+          in: path
+          description: ID of Vouchers that needs to be fetched
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vouchers'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Vouchers'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Vouchers not found
+          
+    delete:
+      tags:
+        - Vouchers
+      summary: Deletes a Vouchers
+      description: delete a Voucers
+      operationId: deleteVoucher
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: VouchersId
+          in: path
+          description: Vouchersts id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid Vouchers value
+        '403':
+          description: Not enough rights
+      security:
+        - ArtistVouchers_auth:
+            - write:Visitors
+            - read:Visitors
+      
+          
+          
+  /Accounts:
+    post:
+      tags:
+        - Accounts
+      summary: Create Accounts
+      description: This can only be done by the logged in Accounts.
+      operationId: createAccounts
+      requestBody:
+        description: Created Accounts object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Accounts'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Accounts'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Accounts'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Accounts'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Accounts'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Accounts not found
+                
+          
+  /Accounts/login:
+    get:
+      tags:
+        - Accounts
+      summary: Logs Accounts into the system
+      description: ''
+      operationId: loginAccounts
+      parameters:
+        - name: Accountsname
+          in: query
+          description: The Accounts name for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the Accounts
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid Accountsname/password supplied
+        '401':
+          description: Unauthorized
+        '403':
+          description: Not enough rights
+        '404':
+          description: Accounts not found
+          
+  /Accounts/logout:
+    get:
+      tags:
+        - Accounts
+      summary: Logs out current logged in Accounts session
+      description: ''
+      operationId: logoutAccounts
+      parameters: []
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid Accountsname supplied
+        '401':
+          description: Unauthorized
+        '403':
+          description: Not enough rights
+        '404':
+          description: Accounts not found
+          
+  /Accounts/{Accountsname}:
+    get:
+      tags:
+        - Accounts
+      summary: Get Accounts by Accounts name
+      description: ''
+      operationId: getAccountsByName
+      parameters:
+        - name: Accountsname
+          in: path
+          description: 'The name that needs to be fetched. Use Accounts1 for testing. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Accounts'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Accounts'
+        '400':
+          description: Invalid Accountsname supplied
+        '404':
+          description: Accounts not found
+          
+    put:
+      tags:
+        - Accounts
+      summary: Update Accounts
+      description: This can only be done by the logged in Accounts.
+      operationId: updateAccounts
+      parameters:
+        - name: Accountsname
+          in: path
+          description: name that need to be deleted
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent Accounts in the Vouchers
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Accounts'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Accounts'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Accounts'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid Accountsname supplied
+        '401':
+          description: Unauthorized
+        '403':
+          description: Not enough rights
+        '404':
+          description: Accounts not found
+          
+    delete:
+      tags:
+        - Accounts
+      summary: Delete Accounts
+      description: This can only be done by the logged in Accounts.
+      operationId: deleteAccounts
+      parameters:
+        - name: Accountsname
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid Accountsname supplied
+        '401':
+          description: Unauthorized
+        '403':
+          description: Not enough rights
+        '404':
+          description: Accounts not found
+          
+          
+  /Visitors:
+    put:
+      tags:
+        - Visitors
+      summary: Update an existing Visitors
+      description: Update an existing Visitors by Id
+      operationId: updateVisitors
+      requestBody:
+        description: Update an existent Visitors in the Vouchers
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Visitors'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Visitors'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Visitors'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visitors'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Visitors'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Visitors not found
+        '422':
+          description: Validation exception
+      security:
+        - ArtistVouchers_auth:
+            - write:Visitors
+            - read:Visitors
+    post:
+      tags:
+        - Visitors
+      summary: Create Visitors
+      description: Create Visitors
+      operationId: addVisitors
+      requestBody:
+        description: Create Visitors
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Visitors'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Visitors'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Visitors'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visitors'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Visitors'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+      security:
+        - ArtistVouchers_auth:
+            - write:Visitors
+            - read:Visitors
+            
+
+  /Visitors/{VisitorsId}:
+    get:
+      tags:
+        - Visitors
+      summary: Find Visitors by ID
+      description: Returns a single Visitors
+      operationId: getVisitorsById
+      parameters:
+        - name: VisitorsId
+          in: path
+          description: ID of Visitors to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visitors'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Visitors'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Visitors not found
+            
+
+
+
+components:
+  schemas:
+    Vouchers:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+        login:
+          type: string
+          example: 198login
+        amount_pictures:
+          type: integer
+          example: 3
+        price:
+          type: integer
+          example: 100
+        description:
+          type: string
+          format: 3 pictures for 100$
+        status:
+          type: string
+          example: placed
+          enum:
+            - placed
+            - in work
+            - ready
+        style:
+          type: string
+          example: realism
+          enum:
+            - realism
+            - impressionism
+            - fauvism
+            - modern
+            - expressionism
+            - cubism
+            - futurism
+            - abstractionism
+            - dadaism
+            - pop-art
+      xml:
+        name: Vouchers
+
+        
+    Accounts:
+      type: object
+      properties:
+        login:
+          type: string
+          example: '10'
+        password:
+          type: string
+          example: theAccounts
+        surName:
+          type: string
+          example: Green
+        firstName:
+          type: string
+          example: John
+        patronymic:
+          type: string
+          example: James
+        email:
+          type: string
+          example: john@email.com
+        type_role:
+          type: string
+          example: artist
+        phone:
+          type: string
+          example: '12345'
+        sex:
+          type: string
+          example: m
+          enum:
+            - f
+            - m
+        date_of_birth: 
+          type: string
+          format: date
+      xml:
+        name: Accounts
+
+
+    Visitors:
+      type: object
+      properties:
+        login:
+          $ref: '#/components/schemas/Accounts'
+        id:
+          $ref: '#/components/schemas/Vouchers'
+        residence:
+          type: string
+          example: Yaroslavl, st/ Syrkova
+      xml:
+        name: Visitors        
+
+    Artists:
+      type: object
+      properties:
+        login:
+          $ref: '#/components/schemas/Accounts'
+        id:
+          $ref: '#/components/schemas/Vouchers'
+        style:
+          type: string
+          example: realism
+          enum:
+            - realism
+            - impressionism
+            - fauvism
+            - modern
+            - expressionism
+            - cubism
+            - futurism
+            - abstractionism
+            - dadaism
+            - pop-art
+      xml:
+        name: Artists
+        
+
+  requestBodies:
+    Artists:
+      description: Artists object that needs to be added to the Vouchers
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Artists'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Artists'
+    AccountsArray:
+      description: List of Accounts object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Accounts'
+  securitySchemes:
+    ArtistVouchers_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://ArtistVouchers3.swagger.io/oauth/authorize
+          scopes:
+            write:Artists: modify Artists in your Accounts
+            read:Artists: read your Artists
+            write:Visitors: modify Visitors in your Accounts
+            read:Visitors: read your Visitors
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
